@@ -8,13 +8,13 @@
  * Author URI:  https://tiaa-forum.org
  * Text Domain: tiaa-invite-form-action
  *
- * Requires Plugins: elementor, elementor-pro, tiaa-wpplugin
+ * Ideally, this plugin should link closely (require?) to elementor, elementor-pro and, tiaa-wpplugin
+ * plugins. However, closely linked in WordPress complicates to the level of making impossible
+ * doing updates on any of those other plugins.
+ *
  * Requires at least: 5.8
  * Tested up to: 6.4
  * Requires PHP: 7.4
- * Elementor tested up to: 3.25.0
- * Elementor Pro tested up to: 3.25.0
- * TIAA-WordPress Plugin tested up to: 0.0.2
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */

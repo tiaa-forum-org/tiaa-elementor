@@ -20,7 +20,7 @@ This plugin is designed to work **in conjunction with** the [TIAA WordPress Plug
 ---
 
 ## Requirements
-
+While these requirements make sense (the plugin won't work without close links to Elementor Pro and the TIAA-WPPlugin, specifying them in the plugin code (e.g. in elementor-forms-tiaa-invite-action.php) the automatic dependencies enforced by WordPress make it at least problematic and maybe impossible to do upgrades and configuration changes to any of the 3 plugins. 
 ### WordPress
 - WordPress Version: **6.0** or higher
 - PHP Version: **7.1.0** or higher
@@ -53,20 +53,22 @@ This plugin is designed to work **in conjunction with** the [TIAA WordPress Plug
 
 ### How it Works
 - When a form is submitted, this plugin triggers an API call to the TIAA WordPress Plugin's invite system.
-- The TIAA plugin processes the submission by communicating with the TIAA Forum server to send invitations.
-- Invitation logs (if enabled) are accessible via the TIAA plugin admin panel.
-
-For advanced features, refer to the [TIAA WordPress Plugin Documentation](https://tiaa-forum.org/).
+   - The form requires an Elementor Pro `form-action` of `TIAA-invite` after submission that causes some JavaScript code to be loaded that completely bypasses the Elementor Pro Ajax API handler (e.g. fetch...)
+   - In order to circumvent the normal form submission process, we need to stub out a response from the handler (always success) and let this plugin's JS respond according to the 3-4 expected responses from the TIAA-plugin for an invite request to Discourse
+- The TIAA plugin processes the submission by communicating with the TIAA Forum Discourse server to send an invitations to the email address on the submitted form.
+- ~~Invitation logs (if enabled) are accessible via the TIAA plugin admin panel.~~
 
 ---
 
 ## File Structure Overview
 
-| File                                | Functionality                                                       |
-|-------------------------------------|---------------------------------------------------------------------|
+| File                                     | Functionality                                                       |
+|------------------------------------------|---------------------------------------------------------------------|
 | `elementor-forms-tiaa-invite-action.php` | Registers the custom Elementor Pro form action `TIAA Invite`.       |
-| `form-action/tiaa-invite.php`       | Executes form actions to connect Elementor forms with the TIAA API. |
-| `assets/js/form-handler.js`         | Handles REST API requests for form-related functionality.           |
+| `form-action/tiaa-invite.php`            | Executes form actions to connect Elementor forms with the TIAA API. |
+| `assets/js/form-handler.js`              | Handles REST API requests for form-related functionality.           |
+| `README.md`                              | This file.                                                          |
+| `LICENSE.md`                             | License boilerplate.                                                |
 
 ---
 
@@ -74,7 +76,6 @@ For advanced features, refer to the [TIAA WordPress Plugin Documentation](https:
 
 ### Prerequisites
 - WordPress development environment installed and running.
-- PHP 7.1+ and Node.js for asset management if modifying frontend scripts.
 
 ### Testing
 Ensure to test the plugin alongside:
@@ -91,7 +92,7 @@ We welcome contributions! Follow these steps:
 
 ## License
 
-This plugin is licensed under the **GPL v2.0 or later**. See the `LICENSE` file for full details.
+This plugin is licensed under the **GPL v2.0 or later**. See the `LICENSE.md` file for full details.
 
 ---
 
