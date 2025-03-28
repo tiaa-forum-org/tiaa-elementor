@@ -56,68 +56,98 @@ document.addEventListener('DOMContentLoaded', function () {
  * @listens submit
  * @since 0.0.3
  */
-document.addEventListener('submit', function (event) {
-//    console.log('listener set');
-    if (event.target.matches('#tiaa_invite_form')) {
-        event.preventDefault(); // Prevent default form submission
+(function () {
+    function attachListenerToForm() {
+//        console.log('Attaching listener to form');
+        const form = document.querySelector('#tiaa_invite_form');
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                console.log('Form submitted');
+                // we need to reset this in case someone re-uses the form without refreshing
+                // the page
+                const tiaaHideArray = document.querySelectorAll('.tiaa_status_hide');
+                tiaaHideArray.forEach(element => {
+                    element.style.display = 'none';
+                });
+//                const form = event.target;
+                const formData = new FormData(form); // Collect form data
+                // Convert FormData to a plain object
+                const dataObject = {};
+                formData.forEach((value, key) => {
+                    dataObject[key] = value;
+                });
 
-        // we need to reset this in case someone re-uses the form without refreshing
-        // the page
-        const tiaaHideArray = document.querySelectorAll('.tiaa_status_hide');
-        tiaaHideArray.forEach(element => {
-            element.style.display = 'none';
-        });
-        const form = event.target;
-        const formData = new FormData(form); // Collect form data
-        // Convert FormData to a plain object
-        const dataObject = {};
-        formData.forEach((value, key) => {
-            dataObject[key] = value;
-        });
-        // tiaaPluginData{} object is passed in from the plugin via WP localized script
-        // in the WP plugin
-        wp.apiFetch.use( wp.apiFetch.createNonceMiddleware( tiaaPluginData.nonce ) );
-        // Use wp.apiFetch to send the form data
-        wp.apiFetch({
-            path: tiaaPluginData.apiUrl,
-            method: 'POST',
-            data: dataObject,
-        })
-            .then((response) => {
-                try {
-                    if (response.success && response.status === 200) {
-                        if (response?.code === 'dropped_email' ) {
-                            const statusDiv = document.querySelector('#tiaa_dropped_msg');
-                            statusDiv.style.display = 'none';
-                        } else {
-                            tiaa_show_email_msg('#tiaa_success_msg',
-                                dataObject['form_fields[email]'] || 'No email provided');
-                        }
-                    } else {
-                        throw new Error(response.response || 'Unknown error');
-                    }
-                } catch (error) {
-                    // Handle parsing or processing errors
-                    console.error("Error processing response: ", error);
-                    tiaa_show_error_msg('#tiaa_error_unk_msg', error.message);
+                wp.apiFetch.use(wp.apiFetch.createNonceMiddleware(tiaaPluginData.nonce));
+                // tiaaPluginData{} object is passed in from the plugin via WP localized script
+                // in the WP plugin
+                if (!tiaaPluginData || !tiaaPluginData.apiUrl || !tiaaPluginData.nonce) {
+                    console.error('TIAA Plugin data is not properly initialized.');
+                    return;
                 }
-            })
-            .catch((error) => {
-                let message = '';
-                // Handle errors and update the status div
-                    if (error?.status === 403 || error.message?.includes('403')) {
-                        message = 'A configuration error occurred.';
-                        tiaa_show_error_msg('#tiaa_error_403_msg', message);
-                    } else if (error.message?.includes('already a member')) {
-                        let email = dataObject['form_fields[email]'];
-                        tiaa_show_email_msg('#tiaa_duplicate_msg', email);
-                    } else {
-                        message = error.message || 'An unknown error occurred.';
-                        tiaa_show_error_msg('#tiaa_error_unk_msg', message);
-                    }
-            });
+                // Use wp.apiFetch to send the form data
+                wp.apiFetch({
+                    path: tiaaPluginData.apiUrl,
+                    method: 'POST',
+                    data: dataObject,
+                })
+                    .then((response) => {
+                        try {
+                            if (response.success && response.status === 200) {
+                                if (response?.code === 'dropped_email') {
+                                    const statusDiv = document.querySelector('#tiaa_dropped_msg');
+                                    statusDiv.style.display = 'none';
+                                } else {
+                                    tiaa_show_email_msg('#tiaa_success_msg',
+                                        dataObject['form_fields[email]'] || 'No email provided');
+                                }
+                            } else {
+                                throw new Error(response.response || 'Unknown error');
+                            }
+                        } catch (error) {
+                            // Handle parsing or processing errors
+                            console.error("Error processing response: ", error);
+                            tiaa_show_error_msg('#tiaa_error_unk_msg', error.message);
+                        }
+                    })
+                    .catch((error) => {
+                        let message = '';
+                        // Handle errors and update the status div
+                        if (error?.status === 403 || error.message?.includes('403')) {
+                            message = 'A configuration error occurred.';
+                            tiaa_show_error_msg('#tiaa_error_403_msg', message);
+                        } else if (error.message?.includes('already a member')) {
+                            let email = dataObject['form_fields[email]'];
+                            tiaa_show_email_msg('#tiaa_duplicate_msg', email);
+                        } else {
+                            message = error.message || 'An unknown error occurred.';
+                            tiaa_show_error_msg('#tiaa_error_unk_msg', message);
+                        }
+                    });
+            }, true); // set capture mode
+//            console.log('Form listener attached');
+            return true;
+        }
+        return false;
     }
+
+    window.attachListenerToForm = attachListenerToForm;
+})();
+
+
+// Try immediately after DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    if (attachListenerToForm()) return;
+
+    // Set up observer if the form isn't there yet
+    const observer = new MutationObserver(() => {
+        if (attachListenerToForm()) {
+            observer.disconnect();
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 });
+
 /**
  * Displays a status message with the provided email address.
  *
