@@ -1,4 +1,4 @@
-g<?php
+<?php
 /**
  * Clickable Loop Grid cards — site-wide.
  *
