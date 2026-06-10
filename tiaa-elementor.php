@@ -4,7 +4,7 @@
  * Description: Elementor Pro extensions for tiaa-forum.org. Provides a custom Discourse
  *              invite form action and site-wide clickable Loop Grid cards.
  * Plugin URI:  https://tiaa-forum.org/
- * Version:     0.0.8
+ * Version:     0.0.9
  * Author:      Lew Grothe, TIAA Admin Platform Subteam
  * Author URI:  https://tiaa-forum.org
  * Text Domain: tiaa-elementor
@@ -23,6 +23,33 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
+
+define( 'TIAA_ELEMENTOR_VERSION', '0.0.9' );
+
+// ---------------------------------------------------------------------------
+// Sitewide stylesheet
+// ---------------------------------------------------------------------------
+
+/**
+ * Enqueue the plugin stylesheet on every front-end page.
+ *
+ * The stylesheet provides .tiaa-member-only and .tiaa-anon-only utility
+ * classes that are toggled by the `tiaa-member` body class. That class is
+ * added by tiaa-wpplugin whenever the tiaa_member cookie is present, covering
+ * all three visitor states (anonymous, returning member, logged-in member).
+ * Enqueueing sitewide ensures the rules apply regardless of which template or
+ * widget is active on the page.
+ *
+ * @since 0.0.8
+ */
+add_action( 'wp_enqueue_scripts', function () {
+	wp_enqueue_style(
+		'tiaa-elementor',
+		plugin_dir_url( __FILE__ ) . 'assets/css/tiaa-elementor.css',
+		[],
+		TIAA_ELEMENTOR_VERSION
+	);
+} );
 
 // ---------------------------------------------------------------------------
 // Clickable Loop Grid cards — site-wide

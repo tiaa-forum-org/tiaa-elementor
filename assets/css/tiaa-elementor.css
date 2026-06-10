@@ -1,0 +1,28 @@
+/**
+ * TIAA Elementor — Sitewide utility styles
+ *
+ * These classes pair with the `tiaa-member` body class set by tiaa-wpplugin
+ * when the tiaa_member cookie is present. They allow template authors to
+ * show or hide elements based on member state without any extra JavaScript.
+ *
+ * Usage:
+ *   .tiaa-member-only — add to elements visible only to known members
+ *   .tiaa-anon-only   — add to elements visible only to anonymous visitors
+ *
+ * The tiaa_member cookie persists after logout, so "member" here means a
+ * visitor who has logged in at least once — not necessarily currently logged in.
+ * Use Elementor's built-in login-state conditions for session-based targeting.
+ */
+
+/* Member-only elements: hidden by default, shown when cookie present */
+.tiaa-member-only {
+    display: none !important;
+}
+body.tiaa-member .tiaa-member-only {
+    display: block !important;
+}
+
+/* Anon-only elements: hidden when cookie present */
+body.tiaa-member .tiaa-anon-only {
+    display: none !important;
+}
