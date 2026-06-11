@@ -3,11 +3,13 @@
 
 ## What This Is
 
-Elementor Pro extensions for tiaa-forum.org. Current version: 0.0.9. Two features:
+Elementor Pro extensions for tiaa-forum.org. Current version: 0.0.9. Three features:
 
 1. **Discourse Invite form action** — custom "TIAA Invite" submit action for
    Elementor Pro forms; POSTs to tiaa-wpplugin's REST API to send Discourse invites
 2. **Clickable Loop Grid cards** — makes entire Loop Grid cards clickable site-wide
+3. **Member/anon CSS utility classes** — sitewide stylesheet providing `.tiaa-member-only`
+   and `.tiaa-anon-only` classes toggled by the `tiaa-member` body class
 
 Part of the tiaa-v3 project. See umbrella context at `../CLAUDE.md`.
 
@@ -20,14 +22,16 @@ Part of the tiaa-v3 project. See umbrella context at `../CLAUDE.md`.
 
 ```
 tiaa-elementor/
-├── tiaa-elementor.php          ← entry point; registers both features
+├── tiaa-elementor.php          ← entry point; registers all features
 ├── form-action/
 │   └── tiaa-invite-action.php  ← Elementor Pro form action class
 ├── loop-grid/
 │   └── clickable-cards.php     ← Loop Grid click handler
 └── assets/
-    └── js/
-        └── form-handler.js     ← front-end invite form submission (enqueued on demand)
+    ├── js/
+    │   └── form-handler.js     ← front-end invite form submission (enqueued on demand)
+    └── css/
+        └── tiaa-elementor.css  ← member/anon utility classes (enqueued sitewide)
 ```
 
 ---
@@ -64,6 +68,30 @@ Loaded unconditionally on all front-end pages (`loop-grid/clickable-cards.php`
 required directly from the main plugin file). Makes every Loop Grid card's
 entire area clickable by finding the first link inside each card and extending
 its click target to the card container.
+
+No Elementor Pro requirement for this feature.
+
+---
+
+## Feature 3: Member/Anon CSS Utility Classes
+
+`assets/css/tiaa-elementor.css` is enqueued sitewide via `wp_enqueue_scripts`.
+Provides two utility classes for template authors:
+
+| Class | Behaviour |
+|---|---|
+| `.tiaa-member-only` | Hidden by default; shown when `body.tiaa-member` is present |
+| `.tiaa-anon-only` | Visible by default; hidden when `body.tiaa-member` is present |
+
+The `tiaa-member` body class is set by **tiaa-wpplugin** (`TiaaHooks::add_member_body_class`,
+v0.0.8+) whenever the `tiaa_member` cookie is present — covering all three visitor states:
+
+- **Anonymous** — no cookie → `tiaa-member` absent → `.tiaa-member-only` hidden
+- **Returning member** (logged out) — cookie present → `tiaa-member` on body → `.tiaa-member-only` shown
+- **Logged-in member** — cookie present → same as above
+
+Add these classes to any Elementor element via **Advanced → CSS Classes**. Use Elementor's
+built-in login-state conditions for targeting currently-logged-in users specifically.
 
 No Elementor Pro requirement for this feature.
 
