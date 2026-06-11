@@ -111,6 +111,7 @@ No Elementor Pro requirement for this feature.
 
 ## Deployment Notes
 
-- No build step; JS is plain ES5 (no bundler)
+- No build step; JS is plain ES5 and CSS is plain CSS (no bundler)
 - `form-handler.js` version is set via `filemtime()` — cache-busted automatically on file change
+- `tiaa-elementor.css` version is set via `TIAA_ELEMENTOR_VERSION` constant — bump the constant when the CSS changes
 - Activate only after `tiaa-elementor-forms-invite-action` is removed
