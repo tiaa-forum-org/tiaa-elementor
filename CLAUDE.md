@@ -1,9 +1,9 @@
 # tiaa-elementor — Claude Code Context
-# Last updated: 2026-06-25
+# Last updated: 2026-07-04
 
 ## What This Is
 
-Elementor Pro extensions for tiaa-forum.org. Current version: 0.0.9. Three features:
+Elementor Pro extensions for tiaa-forum.org. Current version: 0.0.12. Three features:
 
 1. **Discourse Invite form action** — custom "TIAA Invite" submit action for
    Elementor Pro forms; POSTs to tiaa-wpplugin's REST API to send Discourse invites

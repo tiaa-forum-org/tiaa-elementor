@@ -4,7 +4,7 @@
  * Description: Elementor Pro extensions for tiaa-forum.org. Provides a custom Discourse
  *              invite form action and site-wide clickable Loop Grid cards.
  * Plugin URI:  https://tiaa-forum.org/
- * Version:     0.0.9
+ * Version:     0.0.12
  * Author:      Lew Grothe, TIAA Admin Platform Subteam
  * Author URI:  https://tiaa-forum.org
  * Text Domain: tiaa-elementor
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'TIAA_ELEMENTOR_VERSION', '0.0.9' );
+define( 'TIAA_ELEMENTOR_VERSION', '0.0.12' );
 
 // ---------------------------------------------------------------------------
 // Sitewide stylesheet
