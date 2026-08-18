@@ -1,5 +1,5 @@
 # tiaa-elementor — Claude Code Context
-# Last updated: 2026-07-04
+# Last updated: 2026-08-18
 
 ## What This Is
 
@@ -92,6 +92,16 @@ v0.0.8+) whenever the `tiaa_member` cookie is present — covering all three vis
 
 Add these classes to any Elementor element via **Advanced → CSS Classes**. Use Elementor's
 built-in login-state conditions for targeting currently-logged-in users specifically.
+
+**Security boundary (tiaa-wpplugin SECURITY-REVIEW.md F7):** `.tiaa-member-only` and
+`.tiaa-anon-only` are presentation-only — they hide/show via CSS, not an access control.
+The `tiaa_member` cookie driving them is trivially spoofable (any visitor can set
+`tiaa_member=1`) and is never checked by any PHP capability, REST permission, or
+content-access decision on the WordPress side. Because `.tiaa-member-only` hides via CSS,
+anything placed behind it is still present in the page HTML for anonymous visitors — the
+cookie only controls whether it's *displayed*. Fine for cosmetic member/anon UI; **never**
+use these classes to gate sensitive content. See `tiaa-wpplugin/CLAUDE.md`'s
+`TiaaMemberCookie` section for the full trace.
 
 No Elementor Pro requirement for this feature.
 
