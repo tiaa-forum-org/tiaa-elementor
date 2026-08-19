@@ -17,7 +17,7 @@ cd ../../
 current_date=$(date "+%y%m%d%H%M")
 rm -f /tmp/${PACKAGE_NAME}.zip
 
-zip -r /tmp/${PACKAGE_NAME}.zip ${PACKAGE_NAME} -x "*/bin/*" "*/.git/*"
+zip -r /tmp/${PACKAGE_NAME}.zip ${PACKAGE_NAME} -x "*/bin/*" "*/.git/*" "*/CLAUDE.md" "*/.claude/*"
 
 cp /tmp/${PACKAGE_NAME}.zip "${TIAA_BACKUP}/${current_date}${PACKAGE_NAME}.zip"
 
